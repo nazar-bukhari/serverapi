@@ -276,7 +276,7 @@ public class PacketReader extends Thread {
 
 			case "send":
 
-				String groupRegEx = "#\\s*(\\w+)";
+				String groupRegEx = "#\\s*(\\w+)"; //Here two group. Each () is a group
 
 				Pattern p = Pattern.compile(groupRegEx);
 				Matcher m = p.matcher(packetString);
@@ -345,11 +345,14 @@ public class PacketReader extends Thread {
 					// System.out.println(packetString + " from " + senderName);
 					String historyMessage = "[" + senderName + "] " + mainMessage;
 					String groupMessage = "from: " + sender + "  to: #" + group + "  " + mainMessage + "  ";
+					File groupFile = new File(group + "_groupMessage.txt");
+
 					saveHistory(historyMessage, group);
-					saveHistoryWithSenderReceiverName(groupMessage, group);
+					saveHistoryWithSenderReceiverName(groupMessage, groupFile);
 
 				} else if (!isGroupMessage) {
-
+					
+					archivePersonalMessage(packetString,sender);
 					for (Socket socket : sockets) {
 						new UserCommand().displayInClientWindow(packetString, socket);
 					}
@@ -365,6 +368,57 @@ public class PacketReader extends Thread {
 			ex.printStackTrace();
 		}
 
+	}
+	
+	public void archivePersonalMessage(String packetString,String sender){
+		
+		System.out.println("packetString="+packetString);
+		String receiverRegEx = "@\\s*(\\w+)";
+		String receiverName = null;
+		String messageToSave;
+		String[] splitedMessage = null ;
+		List<String> receiverList = new LinkedList<>();
+//		File userFile = null ;
+		
+		Pattern p = Pattern.compile(receiverRegEx);
+		Matcher m = p.matcher(packetString);
+		
+		/**
+		 * Extracting userName from message.
+		 * Populating List.
+		 */
+		while(m.find()){
+			
+			receiverName = m.group(1);
+			receiverList.add(receiverName);
+			String messageWithoutUserName = packetString.replaceAll("(@).*?\\S*", "");
+			splitedMessage = messageWithoutUserName.split(" ", 2);
+			String originalMessage = splitedMessage[1];
+
+		}
+		
+		int lastWordPosition = splitedMessage[1].lastIndexOf(" ");
+		String mainMessage = splitedMessage[1].substring(0, lastWordPosition).trim();
+		String senderName = splitedMessage[1].substring((lastWordPosition)).trim();
+		messageToSave = "from: " + sender + "  to: @" + receiverName + "  " + mainMessage + "  ";
+
+
+		/**
+		 * Creating and Saving contents for each user
+		 */
+		for(String receiver : receiverList){
+			
+			File userFile = new File(receiver + "_personalMessage.txt");
+			if(!userFile.exists()){
+				
+				userFile = new File(receiver + "_personalMessage.txt");;
+				saveHistoryWithSenderReceiverName(messageToSave,userFile);
+
+			}
+			else{
+				saveHistoryWithSenderReceiverName(messageToSave,userFile);
+			}
+		}
 	}
 
 	public void saveHistory(String message, String groupName) {
@@ -388,12 +442,11 @@ public class PacketReader extends Thread {
 
 	}
 
-	public void saveHistoryWithSenderReceiverName(String groupMessage, String groupName) {
+	public void saveHistoryWithSenderReceiverName(String groupMessage, File file) {
 
 		try {
 //			System.out.println("groupMessage=" + groupMessage);
 			// Writing into file
-			File file = new File(groupName + "_groupMessage.txt");
 			FileWriter fWriter = new FileWriter(file.getName(), true);
 			BufferedWriter out = new BufferedWriter(fWriter);
 			Scanner scanner = new Scanner(file);

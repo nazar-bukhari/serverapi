@@ -69,7 +69,19 @@ public class ApiService {
 		if (file.exists()) {
 			json.put("messages", returnJsonArray(file));
 		} else {
-			// System.out.println("Else "+file.getName());
+//			 System.out.println("Else "+file.getName());
+		}
+		return json.toJSONString();
+	}
+	
+	@SuppressWarnings("unchecked")
+	public String getUserMessage(String user) {
+
+		File file = new File(user + "_personalMessage.txt");
+		if (file.exists()) {
+			json.put("messages", returnJsonArray(file));
+		} else {
+//			 System.out.println("Else "+file.getName());
 		}
 		return json.toJSONString();
 	}
@@ -86,13 +98,11 @@ public class ApiService {
 	public String removeUser(long groupId, String userName) {
 
 		File file = new File(groupId + ".txt");
-//		System.out.println(file.getName());
 		if (file.exists()) {
 		
 			UserCommand.leaveGroup(userName, String.valueOf(groupId), null, false);
 			try {
 				Thread.sleep(2000);
-//				System.out.println("Try.....");
 			} catch (Exception ex) {
 				ex.printStackTrace();
 			}

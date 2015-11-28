@@ -62,6 +62,14 @@ public class MyResource {
     	return service.getGroupMessage(groupId);
     }
     
+    @GET
+    @Path("/message/@{userName}")
+    @Produces(MediaType.TEXT_PLAIN)
+    public String getPersonalMessage(@PathParam ("userName") String userName){
+    	
+    	return service.getUserMessage(userName);
+    }
+    
     @DELETE
     @Path("/group/{groupID}/{userName}")
     @Produces(MediaType.TEXT_PLAIN)

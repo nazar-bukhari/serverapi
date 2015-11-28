@@ -4,3 +4,4 @@
 [ratul] hi 111.working?
 [nazar] hi
 [ratul] testing all
+[ratul] hi group
