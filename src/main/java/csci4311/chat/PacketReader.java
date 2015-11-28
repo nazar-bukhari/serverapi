@@ -59,6 +59,7 @@ public class PacketReader extends Thread {
 					if (packetStr != null) {
 
 						new UserSession(packetStr);
+						System.out.println(UserSession.getIntValue());
 						// List<String> user =
 						// currentLoginUser();
 						// for (String s : user) {
@@ -66,7 +67,7 @@ public class PacketReader extends Thread {
 						// "+UserSession.getLoggedInUserList());
 						// }
 
-						// System.out.println(packetStr + " from : " + socket);
+//						 System.out.println(packetStr + " from : " + socket);
 
 						if (packetStr != null) {
 

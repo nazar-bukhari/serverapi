@@ -3,6 +3,7 @@ import java.io.File;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
+import javax.ws.rs.FormParam;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -43,14 +44,15 @@ public class MyResource {
     public String userByGroup(@PathParam ("groupId") long groupId){
 //    	System.out.println("user");
     	return service.getUserByGroup(groupId);
-    }
+    }   
     
     @POST
     @Path("/group/{groupId}")
-    @Consumes(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
     @Produces(MediaType.TEXT_PLAIN)
-    public String addUser(String user,@PathParam ("groupId")long groupId){
-    	 	
+    public String addUser(@FormParam("user") String user,@PathParam ("groupId")long groupId){
+    	
+//    	return user;
     	return service.createUser(user,groupId);
     }
     

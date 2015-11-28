@@ -32,7 +32,7 @@ public class UserSession {
 //            System.out.println("loggedInUserList.length = " + loggedInUserList.size());
         }
         setLoggedInUserList(loggedInUserList); 
-        setIntValue(10);
+//        setIntValue(10);
 	}
 	public static List<String> getLoggedInUserList() {
 		return loggedInUserList;
