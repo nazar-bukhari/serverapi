@@ -37,7 +37,10 @@ public class ClientSender extends Thread {
                 sendMessage = keyRead.readLine();  
                 TextMsgpClient messageClient = new TextMsgpClient();
                 isValid = messageClient.isCommandValid(sendMessage);
+//                System.out.println("Cache in ClietSender="+new UserSession().getCache("1"));
                 if(isValid) {
+//                	System.out.println("IsValid");
+//                  System.out.println("Cache in ClietSender="+new UserSession().getCache("1"));
                     pwrite.println(sendMessage + " " + userName); // sending to server
                     pwrite.flush();
                 }
@@ -49,7 +52,7 @@ public class ClientSender extends Thread {
 
         }
         catch(Exception ex){
-
+        	ex.printStackTrace();
         }
 
     }

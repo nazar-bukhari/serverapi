@@ -18,15 +18,14 @@ public class PacketReader extends Thread {
 	private Boolean isSenderDeclared;
 	List<Socket> sockets;
 	int length;
+	private int count;
 	// public static List<String> loggedInUserList;
 	// private static String packetStr;
 
 	public PacketReader(List<Socket> sockets) {
 
 		this.sockets = sockets;
-		// if (loggedInUserList == null) {
-		// loggedInUserList = new LinkedList<>();
-		// }
+
 	}
 
 	@Override
@@ -37,6 +36,7 @@ public class PacketReader extends Thread {
 		isRunning = true;
 		String packetStr;
 		String sender = null;
+		PrintWriter out = null;
 
 		if (!sockets.contains(socket)) {
 			sockets.add(socket);
@@ -48,27 +48,20 @@ public class PacketReader extends Thread {
 
 			isr = new InputStreamReader(is);
 			br = new BufferedReader(isr);
+			
+			
 
 			while (!socket.isClosed() && isRunning) {
 
 				try {
-
 					packetStr = br.readLine();
+					out = new PrintWriter(socket.getOutputStream(), true);
 					// final String sender = null;
 
 					if (packetStr != null) {
-
+						
 						new UserSession(packetStr);
-						System.out.println(UserSession.getIntValue());
-						// List<String> user =
-						// currentLoginUser();
-						// for (String s : user) {
-						// System.out.println("User :
-						// "+UserSession.getLoggedInUserList());
-						// }
-
 //						 System.out.println(packetStr + " from : " + socket);
-
 						if (packetStr != null) {
 
 							String[] firstUserMessage = packetStr.split("=");
@@ -85,31 +78,59 @@ public class PacketReader extends Thread {
 								response(baseCommand, clientRequest, packetStr, finalSender);
 							}
 						}
-					}
+					}					
 
 				} catch (Exception ex) {
-					// ex.printStackTrace();
+					 ex.printStackTrace();
 				}
-
+				finally{
+					count++;
+					if(count > 1){
+						removeUserFromSessionFile(sender); 
+						break;
+					}
+				}
 			}
 
 		} catch (Exception ex) {
-			// ex.printStackTrace();
+			 ex.printStackTrace();
 		}
 	}
+	
+	public void removeUserFromSessionFile(String user){
+		
+        FileWriter writer = null;
+        List<String> userList = new LinkedList();
+        BufferedReader br = null ;
+        
+        //Delete the user
+        try {
+        	File currentUserFile = new File("currentUser.txt");
+        	br = new BufferedReader(new InputStreamReader(new FileInputStream(currentUserFile)));
 
-	// public String currentLoginUser() {
-	//
-	// String[] firstUserMessage = packetStr.split("=");
-	//
-	// if (firstUserMessage.length == 2) {
-	// System.out.println("firstUserMessage[1]="+firstUserMessage[1]);
-	// return firstUserMessage[1];
-	// }
-	// else{
-	// return null;
-	// }
-	// }
+            for (String line; (line = br.readLine()) != null; ) {
+                if (!line.equals(user)) {
+                    userList.add(line);
+                }
+            }
+            new PrintWriter(currentUserFile).close();
+            writer = new FileWriter(currentUserFile);
+
+            for (String s : userList) {
+                writer.write(s);
+                writer.write("\n");
+            }
+        } catch (Exception ex) {
+//            ex.printStackTrace();
+        } finally {
+            try {
+                br.close();
+                writer.close();
+            } catch (Exception ex) {
+//                ex.printStackTrace();
+            }
+        }
+	}
 
 	public void response(String baseCommand, String[] packet, String packetString, String sender) {
 
@@ -349,7 +370,7 @@ public class PacketReader extends Thread {
 					File groupFile = new File(group + "_groupMessage.txt");
 
 					saveHistory(historyMessage, group);
-					saveHistoryWithSenderReceiverName(groupMessage, groupFile);
+					writeIntoFile(groupMessage, groupFile,true);
 
 				} else if (!isGroupMessage) {
 					
@@ -373,7 +394,7 @@ public class PacketReader extends Thread {
 	
 	public void archivePersonalMessage(String packetString,String sender){
 		
-		System.out.println("packetString="+packetString);
+//		System.out.println("packetString="+packetString);
 		String receiverRegEx = "@\\s*(\\w+)";
 		String receiverName = null;
 		String messageToSave;
@@ -405,19 +426,20 @@ public class PacketReader extends Thread {
 
 
 		/**
-		 * Creating and Saving contents for each user
+		 * Creating and Saving Message for each user
 		 */
 		for(String receiver : receiverList){
 			
 			File userFile = new File(receiver + "_personalMessage.txt");
+			//Creating file for the first Time
 			if(!userFile.exists()){
 				
 				userFile = new File(receiver + "_personalMessage.txt");;
-				saveHistoryWithSenderReceiverName(messageToSave,userFile);
+				writeIntoFile(messageToSave,userFile,true);
 
 			}
 			else{
-				saveHistoryWithSenderReceiverName(messageToSave,userFile);
+				writeIntoFile(messageToSave,userFile,true);
 			}
 		}
 	}
@@ -443,12 +465,12 @@ public class PacketReader extends Thread {
 
 	}
 
-	public void saveHistoryWithSenderReceiverName(String groupMessage, File file) {
+	public static void writeIntoFile(String groupMessage, File file,boolean append) {
 
 		try {
 //			System.out.println("groupMessage=" + groupMessage);
 			// Writing into file
-			FileWriter fWriter = new FileWriter(file.getName(), true);
+			FileWriter fWriter = new FileWriter(file.getName(), append);
 			BufferedWriter out = new BufferedWriter(fWriter);
 			Scanner scanner = new Scanner(file);
 			if (scanner.hasNext()) {

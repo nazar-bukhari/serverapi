@@ -28,11 +28,8 @@ public class ApiService {
 		
 //		List<String> currentUsers = PacketReader.currentLoginUser();
 //		List<String> currentUsers = PacketReader.loggedInUserList;
-		System.out.println("Size="+UserSession.getIntValue());
-		System.out.println("Size="+UserSession.getLoggedInUserList());
-		for(String user : UserSession.loggedInUserList){
-			jsonArray.add(user);
-		}
+
+
 		json.put("users",jsonArray);
 		return json.toJSONString();
 	}

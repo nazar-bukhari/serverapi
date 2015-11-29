@@ -1,5 +1,6 @@
 package csci4311.chat;
 
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.List;
@@ -41,6 +42,14 @@ public class PacketReceiver extends Thread{
                     pr.socket  = sSock.accept(); 
 //                    readerCount++;
                     pr.start();
+                    System.out.println("PKT Reader Started");
+//                    PrintWriter out =  new PrintWriter(sSock.accept().getOutputStream(), true);
+//                	if(out.checkError()){
+//            			System.out.println("Client Disconnected");
+//            		}
+//            		else{
+//            			System.out.println("Client Connected....");
+//            		}
                 }
                 catch(Exception ex){
                     ex.printStackTrace();

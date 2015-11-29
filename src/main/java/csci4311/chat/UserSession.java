@@ -1,46 +1,37 @@
 package csci4311.chat;
 
+import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
-public class UserSession {
+public class UserSession implements java.io.Serializable {
 
-	 public static List<String> loggedInUserList;
-	 public static int intValue =5;
-//	 private static String packetStr; 
-	 
-	 
-	public UserSession(){
-		
-	}
-	public static int getIntValue() {
-		return intValue;
-	}
-	public static void setIntValue(int intValue) {
-		UserSession.intValue = intValue;
-	}
-	public UserSession(String packetStr){
-		
-        if (loggedInUserList == null) {
-            loggedInUserList = new LinkedList<>();
-        }
-        String[] firstUserMessage = packetStr.split("=");
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
-        if (firstUserMessage.length == 2) {
-            String userName = firstUserMessage[1];
-            loggedInUserList.add(userName);
-//            System.out.println("loggedInUserList.length = " + loggedInUserList.size());
-        }
-        setLoggedInUserList(loggedInUserList); 
-//        setIntValue(10);
+	public UserSession() {
+
 	}
-	public static List<String> getLoggedInUserList() {
-		return loggedInUserList;
+
+	public UserSession(String packetStr) {
+
+		try {
+
+			String[] firstUserMessage = packetStr.split("=");
+			String userName = null;
+
+			if (firstUserMessage.length == 2) {
+				userName = firstUserMessage[1];
+			}
+			File currentUserFile = new File("currentUser.txt");
+
+			PacketReader.writeIntoFile(userName, currentUserFile, true);
+
+		} catch (Exception ex) {
+			ex.printStackTrace();
+		}
 	}
-	public static void setLoggedInUserList(List<String> loggedInUserList) {
-		UserSession.loggedInUserList = loggedInUserList;
-	}
-	
-	
 
 }

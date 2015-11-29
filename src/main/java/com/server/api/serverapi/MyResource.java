@@ -1,5 +1,9 @@
 package com.server.api.serverapi;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.DELETE;
@@ -11,8 +15,14 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import com.server.api.service.ApiService;
-
 import csci4311.chat.UserCommand;
+
+import javax.ws.rs.WebApplicationException;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+
+import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -56,6 +66,28 @@ public class MyResource {
     	return service.createUser(user,groupId);
     }
     
+//    @POST
+//    @Path("/message")
+//    @Consumes(MediaType.MULTIPART_FORM_DATA)
+////    @Produces(MediaType.TEXT_PLAIN)
+//    public String postMessage(@FormDataParam("file") InputStream fileInputStream,
+//            @FormDataParam("file") FormDataContentDisposition fileMetaData){
+//    	
+//    	System.out.println("fileDetail="+fileMetaData.getFileName());
+//
+//    	return fileMetaData.getFileName();
+////    	return service.createUser(user,groupId);
+//    }
+    
+//    @POST
+//    @Path("/pdf")
+//    @Consumes({MediaType.MULTIPART_FORM_DATA})
+//    public void uploadPdfFile(  @FormDataParam("file") InputStream fileInputStream,
+//                                    @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception
+//    {
+//    	System.out.println("fileMetaData="+fileMetaData.getFileName());
+//    }
+    
     @GET
     @Path("/messages/{groupId}")
     @Produces(MediaType.TEXT_PLAIN)
@@ -65,7 +97,7 @@ public class MyResource {
     }
     
     @GET
-    @Path("/message/@{userName}")
+    @Path("/messages/@{userName}")
     @Produces(MediaType.TEXT_PLAIN)
     public String getPersonalMessage(@PathParam ("userName") String userName){
     	
