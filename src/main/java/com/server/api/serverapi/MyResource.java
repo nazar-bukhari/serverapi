@@ -21,8 +21,10 @@ import javax.ws.rs.WebApplicationException;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import org.apache.commons.io.IOUtils;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.glassfish.jersey.media.multipart.MultiPart;
 
 /**
  * Root resource (exposed at "myresource" path)
@@ -79,14 +81,18 @@ public class MyResource {
 ////    	return service.createUser(user,groupId);
 //    }
     
-//    @POST
-//    @Path("/pdf")
-//    @Consumes({MediaType.MULTIPART_FORM_DATA})
-//    public void uploadPdfFile(  @FormDataParam("file") InputStream fileInputStream,
-//                                    @FormDataParam("file") FormDataContentDisposition fileMetaData) throws Exception
-//    {
-//    	System.out.println("fileMetaData="+fileMetaData.getFileName());
-//    }
+    @POST
+    @Path("/pdf")
+    @Consumes(MediaType.MULTIPART_FORM_DATA)
+    public String uploadPdfFile(@FormDataParam("file") InputStream uploadedInputStream,
+            @FormDataParam("file") FormDataContentDisposition fileDetail) throws IOException 
+    {
+    	System.out.println("******************* pdf *******************************");
+//    	http://stackoverflow.com/questions/18252990/uploading-file-using-jersey-over-restfull-service-and-the-resource-configuration
+//    	http://stackoverflow.com/questions/5772225/trying-to-upload-a-file-to-a-jax-rs-jersey-server
+    	return fileDetail.getFileName();
+    	
+    }
     
     @GET
     @Path("/messages/{groupId}")
