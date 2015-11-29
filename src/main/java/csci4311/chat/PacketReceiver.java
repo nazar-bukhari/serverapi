@@ -40,16 +40,7 @@ public class PacketReceiver extends Thread{
 
                     PacketReader pr = new PacketReader(sockets);
                     pr.socket  = sSock.accept(); 
-//                    readerCount++;
                     pr.start();
-                    System.out.println("PKT Reader Started");
-//                    PrintWriter out =  new PrintWriter(sSock.accept().getOutputStream(), true);
-//                	if(out.checkError()){
-//            			System.out.println("Client Disconnected");
-//            		}
-//            		else{
-//            			System.out.println("Client Connected....");
-//            		}
                 }
                 catch(Exception ex){
                     ex.printStackTrace();

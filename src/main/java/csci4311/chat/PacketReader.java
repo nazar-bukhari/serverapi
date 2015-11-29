@@ -19,8 +19,6 @@ public class PacketReader extends Thread {
 	List<Socket> sockets;
 	int length;
 	private int count;
-	// public static List<String> loggedInUserList;
-	// private static String packetStr;
 
 	public PacketReader(List<Socket> sockets) {
 
@@ -56,7 +54,6 @@ public class PacketReader extends Thread {
 				try {
 					packetStr = br.readLine();
 					out = new PrintWriter(socket.getOutputStream(), true);
-					// final String sender = null;
 
 					if (packetStr != null) {
 						
@@ -69,7 +66,6 @@ public class PacketReader extends Thread {
 							if (firstUserMessage.length == 2) {
 								sender = firstUserMessage[1];
 								isSenderDeclared = true;
-//								System.out.println("sender=" + sender);
 							}
 							if (isSenderDeclared) {
 								finalSender = sender;
@@ -184,10 +180,7 @@ public class PacketReader extends Thread {
 							try {
 								scanner = new Scanner(file);
 							} catch (FileNotFoundException e) {
-								e.printStackTrace(); // To change body of catch
-														// statement use File |
-														// Settings | File
-														// Templates.
+								e.printStackTrace(); 
 							}
 							while (scanner.hasNextLine()) {
 								/**

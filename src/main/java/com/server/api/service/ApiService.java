@@ -24,16 +24,15 @@ public class ApiService {
 	}
 
 	@SuppressWarnings("unchecked")
-	public String getLoggedInUsers(){
-		
-//		List<String> currentUsers = PacketReader.currentLoginUser();
-//		List<String> currentUsers = PacketReader.loggedInUserList;
+	public String getLoggedInUsers() {
 
-
-		json.put("users",jsonArray);
+		file = new File("currentUser.txt");
+		if (file.exists()) {
+			json.put("users", returnJsonArray(file));
+		}
 		return json.toJSONString();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public String getAllGroup() {
 
@@ -58,7 +57,7 @@ public class ApiService {
 		}
 		return json.toJSONString();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public String getGroupMessage(long groupId) {
 
@@ -66,11 +65,11 @@ public class ApiService {
 		if (file.exists()) {
 			json.put("messages", returnJsonArray(file));
 		} else {
-//			 System.out.println("Else "+file.getName());
+			// System.out.println("Else "+file.getName());
 		}
 		return json.toJSONString();
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	public String getUserMessage(String user) {
 
@@ -78,17 +77,17 @@ public class ApiService {
 		if (file.exists()) {
 			json.put("messages", returnJsonArray(file));
 		} else {
-//			 System.out.println("Else "+file.getName());
+			// System.out.println("Else "+file.getName());
 		}
 		return json.toJSONString();
 	}
-	
-	public String createUser(String user,long groupId){
-		
-    	String fileName = groupId+".txt";
-    	File file = new File(fileName);
-    	UserCommand.joinUser(file, user,String.valueOf(groupId));
-    	return getUserByGroup(groupId);
+
+	public String createUser(String user, long groupId) {
+
+		String fileName = groupId + ".txt";
+		File file = new File(fileName);
+		UserCommand.joinUser(file, user, String.valueOf(groupId));
+		return getUserByGroup(groupId);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -96,7 +95,7 @@ public class ApiService {
 
 		File file = new File(groupId + ".txt");
 		if (file.exists()) {
-		
+
 			UserCommand.leaveGroup(userName, String.valueOf(groupId), null, false);
 			try {
 				Thread.sleep(2000);
